@@ -1,0 +1,45 @@
+<% if user_signed_in? %>
+  <aside class="fixed top-16 left-0 h-[calc(100%-4rem)] w-64 bg-bkack text-white shadow-lg overflow-y-auto hidden md:block">
+    <nav class="flex flex-col space-y-2 p-4">
+      <%= link_to root_path, class: "flex items-center space-x-3 p-2 rounded hover:bg-gray-800" do %>
+        <i class="fas fa-home w-6 text-lg"></i>
+        <span>Home</span>
+      <% end %>
+
+      <%= link_to "#", class: "flex items-center space-x-3 p-2 rounded hover:bg-gray-800" do %>
+        <i class="fas fa-play-circle w-6 text-lg"></i>
+        <span>Shorts</span>
+      <% end %>
+
+      <%= link_to "#", class: "flex items-center space-x-3 p-2 rounded hover:bg-gray-800" do %>
+        <i class="fas fa-users w-6 text-lg"></i>
+        <span>Subscribers</span>
+      <% end %>
+
+      <%= link_to "#", class: "flex items-center space-x-3 p-2 rounded hover:bg-gray-800" do %>
+        <i class="fas fa-photo-video w-6 text-lg"></i>
+        <span>Library</span>
+      <% end %>
+
+      <%= link_to "#", class: "flex items-center space-x-3 p-2 rounded hover:bg-gray-800" do %>
+        <i class="fas fa-list w-6 text-lg"></i>
+        <span>Playlists</span>
+      <% end %>
+
+      <%= link_to "#", class: "flex items-center space-x-3 p-2 rounded hover:bg-gray-800" do %>
+        <i class="fas fa-history w-6 text-lg"></i>
+        <span>History</span>
+      <% end %>
+
+      <%= link_to "#", class: "flex items-center space-x-3 p-2 rounded hover:bg-gray-800" do %>
+        <i class="fas fa-thumbs-up w-6 text-lg"></i>
+        <span>Liked Videos</span>
+      <% end %>
+
+      <%= link_to "#", class: "flex items-center space-x-3 p-2 rounded hover:bg-gray-800" do %>
+        <i class="fas fa-clock w-6 text-lg"></i>
+        <span>Watch Later</span>
+      <% end %>
+    </nav>
+  </aside>
+<% end %>
