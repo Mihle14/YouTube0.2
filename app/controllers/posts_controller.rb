@@ -19,6 +19,12 @@ class PostsController < ApplicationController
   def edit
   end
 
+  def show
+    @post = Post.find(params[:id])
+    @post.increment!(:views)
+  end
+
+
   # POST /posts or /posts.json
   def create
     @post = Post.new(post_params)
@@ -65,6 +71,6 @@ class PostsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def post_params
-      params.require(:post).permit(:title, :description)
+      params.require(:post).permit(:title, :description, :image)
     end
 end

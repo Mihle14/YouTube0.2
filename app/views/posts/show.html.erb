@@ -1,10 +1,38 @@
-<p style="color: green"><%= notice %></p>
+<div class="min-h-screen flex flex-col items-center justify-center bg-black text-white py-8">
+  <div class="w-full max-w-md bg-gray-900 p-6 rounded-2xl shadow-lg">
+    
+    <% if notice %>
+      <p class="text-green-500 mb-4 text-center"><%= notice %></p>
+    <% end %>
 
-<%= render @post %>
+    <div class="mb-6">
+      <h2 class="text-center text-2xl font-bold mb-4"><%= @post.title %></h2>
 
-<div>
-  <%= link_to "Edit this post", edit_post_path(@post) %> |
-  <%= link_to "Back to posts", posts_path %>
+      <% if @post.image.attached? %>
+        <div class="mb-4">
+          <%= image_tag @post.image, class: "w-full rounded-lg" %>
+        </div>
+      <% end %>
 
-  <%= button_to "Destroy this post", @post, method: :delete %>
+      <p class="text-gray-300"><%= @post.description %></p>
+
+      <div class="flex justify-between mt-6">
+        <div class="space-x-4">
+          <%= link_to "Edit", edit_post_path(@post), class: "text-blue-400 hover:underline font-semibold" %>
+          <%= link_to "Back to posts", posts_path, class: "text-gray-400 hover:underline font-semibold" %>
+        </div>
+
+        <div>
+          <%= button_to "Destroy", @post, method: :delete,
+                data: { confirm: "Are you sure?" },
+                class: "bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition font-semibold" %>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="mt-8 text-center text-gray-500 text-xs">
+    <p>© 2025 YouTube0.2. All rights reserved.</p>
+  </footer>
 </div>
