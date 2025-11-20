@@ -1,9 +1,16 @@
 <div id="<%= dom_id post %>" class="bg-[#181818] rounded-xl overflow-hidden shadow-md hover:scale-105 transition-transform w-64">
-  <% if post.image.attached? %>
+  <% if post.video.attached? %>
+    <video controls class="w-full h-36 object-cover">
+      <source src="<%= url_for(post.video) %>" type="<%= post.video.content_type %>">
+      Your browser does not support the video tag.
+    </video>
+
+  <% elsif post.image.attached? %>
     <%= image_tag post.image, class: "w-full h-36 object-cover" %>
+
   <% else %>
     <div class="w-full h-36 flex items-center justify-center bg-gray-700 text-gray-400">
-      No image
+      No image or video
     </div>
   <% end %>
 

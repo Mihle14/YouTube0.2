@@ -12,6 +12,13 @@
         <div class="mb-4">
           <%= image_tag @post.image, class: "w-full rounded-lg" %>
         </div>
+      <% elsif @post.video.attached? %>
+        <div class="mb-4">
+          <video controls class="w-full rounded-lg">
+            <source src="<%= url_for(@post.video) %>" type="<%= @post.video.content_type %>">
+            Your browser does not support the video tag.
+          </video>
+        </div>
       <% end %>
 
       <p class="text-gray-300"><%= @post.description %></p>
