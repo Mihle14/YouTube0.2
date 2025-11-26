@@ -1,45 +1,71 @@
 <% if user_signed_in? %>
-  <aside class="fixed top-16 left-0 h-[calc(100%-4rem)] w-64 bg-bkack text-white shadow-lg overflow-y-auto hidden md:block">
-    <nav class="flex flex-col space-y-2 p-4">
-      <%= link_to root_path, class: "flex items-center space-x-3 p-2 rounded hover:bg-gray-800" do %>
-        <i class="fas fa-home w-6 text-lg"></i>
-        <span>Home</span>
+  <aside class="fixed top-16 left-0 h-[calc(100%-4rem)] w-64 bg-black text-white shadow-lg overflow-y-auto hidden md:flex flex-col">
+
+    <nav class="flex flex-col space-y-1 p-4">
+      <%= link_to root_path, class: "flex items-center gap-4 px-3 py-2 rounded-lg hover:bg-[#272727] transition" do %>
+        <i class="fas fa-home text-xl w-6"></i>
+        <span class="text-sm font-medium">Home</span>
       <% end %>
 
-      <%= link_to "#", class: "flex items-center space-x-3 p-2 rounded hover:bg-gray-800" do %>
-        <i class="fas fa-play-circle w-6 text-lg"></i>
-        <span>Shorts</span>
+      <%= link_to "#", class: "flex items-center gap-4 px-3 py-2 rounded-lg hover:bg-[#272727] transition" do %>
+        <i class="fas fa-fire text-xl w-6"></i>
+        <span class="text-sm font-medium">Trending</span>
       <% end %>
 
-      <%= link_to "#", class: "flex items-center space-x-3 p-2 rounded hover:bg-gray-800" do %>
-        <i class="fas fa-users w-6 text-lg"></i>
-        <span>Subscribers</span>
+      <%= link_to "#", class: "flex items-center gap-4 px-3 py-2 rounded-lg hover:bg-[#272727] transition" do %>
+        <i class="fas fa-photo-video text-xl w-6"></i>
+        <span class="text-sm font-medium">Library</span>
       <% end %>
 
-      <%= link_to "#", class: "flex items-center space-x-3 p-2 rounded hover:bg-gray-800" do %>
-        <i class="fas fa-photo-video w-6 text-lg"></i>
-        <span>Library</span>
+      <%= link_to "#", class: "flex items-center gap-4 px-3 py-2 rounded-lg hover:bg-[#272727] transition" do %>
+        <i class="fas fa-clock text-xl w-6"></i>
+        <span class="text-sm font-medium">Watch later</span>
       <% end %>
 
-      <%= link_to "#", class: "flex items-center space-x-3 p-2 rounded hover:bg-gray-800" do %>
-        <i class="fas fa-list w-6 text-lg"></i>
-        <span>Playlists</span>
-      <% end %>
-
-      <%= link_to "#", class: "flex items-center space-x-3 p-2 rounded hover:bg-gray-800" do %>
-        <i class="fas fa-history w-6 text-lg"></i>
-        <span>History</span>
-      <% end %>
-
-      <%= link_to "#", class: "flex items-center space-x-3 p-2 rounded hover:bg-gray-800" do %>
-        <i class="fas fa-thumbs-up w-6 text-lg"></i>
-        <span>Liked Videos</span>
-      <% end %>
-
-      <%= link_to "#", class: "flex items-center space-x-3 p-2 rounded hover:bg-gray-800" do %>
-        <i class="fas fa-clock w-6 text-lg"></i>
-        <span>Watch Later</span>
+      <%= link_to "#", class: "flex items-center gap-4 px-3 py-2 rounded-lg hover:bg-[#272727] transition" do %>
+        <i class="fas fa-thumbs-up text-xl w-6"></i>
+        <span class="text-sm font-medium">Liked videos</span>
       <% end %>
     </nav>
+
+    <hr class="border-gray-700 mx-4 my-2">
+
+    <div class="px-6 flex flex-col flex-1">
+      <h3 class="text-gray-400 text-[13px] font-semibold uppercase tracking-wide mb-2">History</h3>
+
+      <% current_user.viewed_posts.order("post_views.created_at DESC").limit(10).each do |post| %>
+        <%= link_to post_path(post), class: "group flex gap-3 p-2 rounded-lg hover:bg-[#272727] transition items-start" do %>
+
+          <% if post.image.present? %>
+            <%= image_tag post.image, class: "w-20 h-12 object-cover rounded-lg bg-gray-900" %>
+          <% elsif post.video.attached? %>
+            <video class="w-20 h-12 object-cover rounded-lg bg-gray-900" muted>
+              <source src="<%= url_for(post.video) %>">
+            </video>
+          <% else %>
+            <div class="w-20 h-12 flex items-center justify-center rounded-lg bg-gray-800 text-xs text-gray-500">
+              No media
+            </div>
+          <% end %>
+
+          <div class="flex flex-col">
+            <span class="text-sm font-medium line-clamp-2 group-hover:text-white">
+              <%= post.title %>
+            </span>
+            <span class="text-xs text-gray-500">
+              <%= time_ago_in_words(post.post_views.find_by(user: current_user)&.created_at || Time.now) %> ago
+            </span>
+          </div>
+
+        <% end %>
+      <% end %>
+
+      <% if current_user.viewed_posts.empty? %>
+        <p class="text-gray-500 text-sm">No history yet.</p>
+      <% end %>
+    </div>
+
+    <div class="h-6"></div>
+
   </aside>
 <% end %>

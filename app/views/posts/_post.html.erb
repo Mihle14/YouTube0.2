@@ -1,12 +1,16 @@
 <div id="<%= dom_id post %>" class="bg-[#181818] rounded-xl overflow-hidden shadow-md hover:scale-105 transition-transform w-64">
-  <% if post.video.attached? %>
-    <video controls class="w-full h-36 object-cover">
-      <source src="<%= url_for(post.video) %>" type="<%= post.video.content_type %>">
-      Your browser does not support the video tag.
-    </video>
+  
+  <% if post.thumbnail.attached? %>
+    <%= image_tag post.thumbnail, class: "w-full h-36 object-cover rounded-t-xl" %>
+
+  <% elsif post.video.attached? %>
+    <div class="relative">
+      <%= image_tag post.video.preview(resize_to_fill: [256, 144]), class: "w-full h-36 object-cover rounded-t-xl" %>
+      <div class="absolute bottom-2 right-2 bg-black bg-opacity-60 text-white text-xs px-1 rounded">0:00</div> <!-- Placeholder timestamp -->
+    </div>
 
   <% elsif post.image.attached? %>
-    <%= image_tag post.image, class: "w-full h-36 object-cover" %>
+    <%= image_tag post.image, class: "w-full h-36 object-cover rounded-t-xl" %>
 
   <% else %>
     <div class="w-full h-36 flex items-center justify-center bg-gray-700 text-gray-400">
@@ -14,16 +18,24 @@
     </div>
   <% end %>
 
-  <div class="p-3">
-    <h3 class="text-base font-semibold mb-1 truncate"><%= post.title %></h3>
-    <p class="text-gray-400 text-sm mb-2 line-clamp-2"><%= post.description %></p>
+  <div class="p-3 flex flex-col justify-between h-44">
+    
+    <div class="mb-2">
+      <h3 class="text-base font-semibold mb-1 truncate"><%= post.title %></h3>
+      <p class="text-gray-400 text-sm line-clamp-2"><%= post.description %></p>
+    </div>
 
-    <div class="flex justify-between text-gray-500 text-xs mb-2">
-      <span>👁️ <%= post.views || 0 %></span>
-      <span>👍 <%= post.likes || 0 %></span>
+    <div class="flex justify-between items-center text-gray-400 text-xs mt-auto">
+      <div class="flex gap-4 items-center">
+        <span>Views: <%= post.views || 0 %></span>
+        <span class="flex items-center gap-1">👍 <%= post.likes.where(like_type: "like").count %></span>
+        <span class="flex items-center gap-1">👎 <%= post.likes.where(like_type: "dislike").count %></span>
+      </div>
+
       <span><%= time_ago_in_words(post.created_at) %> ago</span>
     </div>
 
-    <%= link_to "Show", post, class: "block text-blue-400 hover:text-blue-300 text-sm font-medium text-center" %>
+    <%= link_to "Watch/Look", post, class: "block mt-2 text-blue-400 hover:text-blue-300 text-sm font-medium text-center" %>
+    
   </div>
 </div>

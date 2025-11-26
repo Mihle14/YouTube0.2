@@ -1,21 +1,23 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>YouTube</title>
+    <title>YouTube0.2</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://kit.fontawesome.com/a2e0e6e6f1.js" crossorigin="anonymous"></script>
-
   </head>
 
-  <body class="bg-black text-white min-h-screen">
+  <body class="bg-black text-white min-h-screen pt-20">
+
     <%= render 'layouts/navbar' %>
     <%= render 'layouts/sidebar' %>
+
 
     <% if notice %>
       <p class="bg-green-100 text-green-800 p-2 rounded mb-2 text-center"><%= notice %></p>
@@ -24,9 +26,10 @@
     <% if alert %>
       <p class="bg-red-100 text-red-800 p-2 rounded mb-2 text-center"><%= alert %></p>
     <% end %>
-    
+
     <%= yield %>
 
     <%= render 'layouts/footer' %>
+
   </body>
 </html>

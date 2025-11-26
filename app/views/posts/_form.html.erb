@@ -1,8 +1,7 @@
-<%= form_with(model: post) do |form| %>
+<%= form_with(model: post, local: true) do |form| %>
   <% if post.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(post.errors.count, "error") %> prohibited this post from being saved:</h2>
-
       <ul>
         <% post.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -26,12 +25,17 @@
     <%= form.file_field :video %>
   </div>
 
-  <div>
-    <%= form.label :description, style: "display: block" %>
-    <%= form.text_field :description %>
+  <div class="mb-4">
+    <%= form.label :thumbnail, "Upload Thumbnail (optional)", class: "block mb-1 text-sm font-medium" %>
+    <%= form.file_field :thumbnail, class: "w-full p-2 bg-[#121212] border border-[#3f3f3f] rounded-lg text-white" %>
   </div>
 
   <div>
-    <%= form.submit %>
+    <%= form.label :description, style: "display: block" %>
+    <%= form.text_area :description %>
+  </div>
+
+  <div>
+    <%= form.submit "Create Post", class: "bg-blue-500 text-white px-4 py-2 rounded mt-2" %>
   </div>
 <% end %>

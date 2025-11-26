@@ -1,0 +1,32 @@
+<div class="min-h-screen bg-black flex justify-center pt-24 px-4">
+  <div class="w-full max-w-xl">
+
+    <h1 class="text-2xl font-bold mb-6 text-white text-center">Notifications</h1>
+
+    <% if @notifications.any? %>
+      <div class="bg-[#181818] rounded-xl border border-[#272727] overflow-hidden">
+
+        <% @notifications.each do |n| %>
+          <div class="flex items-center justify-between px-4 py-3 border-b border-[#272727] hover:bg-[#272727] transition">
+
+            <span class="<%= n.read? ? 'text-gray-400' : 'text-white font-semibold' %>">
+              <%= n.message %>
+            </span>
+
+            <% unless n.read? %>
+              <%= button_to "Mark as read",
+                    mark_as_read_notification_path(n),
+                    method: :patch,
+                    class: "text-blue-400 text-sm hover:underline"
+              %>
+            <% end %>
+          </div>
+        <% end %>
+
+      </div>
+    <% else %>
+      <p class="text-gray-500 text-center mt-10 text-sm">No notifications yet</p>
+    <% end %>
+
+  </div>
+</div>

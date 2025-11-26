@@ -1,45 +1,98 @@
-<div class="min-h-screen flex flex-col items-center justify-center bg-black text-white py-8">
-  <div class="w-full max-w-md bg-gray-900 p-6 rounded-2xl shadow-lg">
-    
-    <% if notice %>
-      <p class="text-green-500 mb-4 text-center"><%= notice %></p>
-    <% end %>
+<div class="min-h-screen bg-black text-white px-4 md:px-12 py-8 flex justify-center">
+  <div class="flex flex-col md:flex-row gap-8 w-full max-w-[1280px] md:ml-60">
+    <div class="flex-1 max-w-3xl">
 
-    <div class="mb-6">
-      <h2 class="text-center text-2xl font-bold mb-4"><%= @post.title %></h2>
-
-      <% if @post.image.attached? %>
-        <div class="mb-4">
-          <%= image_tag @post.image, class: "w-full rounded-lg" %>
-        </div>
-      <% elsif @post.video.attached? %>
-        <div class="mb-4">
-          <video controls class="w-full rounded-lg">
+      
+      <div class="w-full mb-4">
+        <% if @post.video.attached? %>
+          <video controls class="w-full rounded-xl shadow-lg">
             <source src="<%= url_for(@post.video) %>" type="<%= @post.video.content_type %>">
             Your browser does not support the video tag.
           </video>
-        </div>
-      <% end %>
+        <% elsif @post.image.attached? %>
+          <%= image_tag @post.image, class: "w-full rounded-xl shadow-lg" %>
+        <% end %>
+      </div>
 
-      <p class="text-gray-300"><%= @post.description %></p>
+     
+      <h1 class="text-2xl md:text-3xl font-bold mb-2"><%= @post.title %></h1>
+      <p class="text-gray-400 mb-4">Views: <%= @post.views %></p>
 
-      <div class="flex justify-between mt-6">
-        <div class="space-x-4">
-          <%= link_to "Edit", edit_post_path(@post), class: "text-blue-400 hover:underline font-semibold" %>
-          <%= link_to "Back to posts", posts_path, class: "text-gray-400 hover:underline font-semibold" %>
-        </div>
+      
+      <div class="flex items-center justify-between mb-4">
+        <div></div> 
+        <div class="flex items-center bg-[#272727] rounded-full overflow-hidden border border-[#3f3f3f]">
 
-        <div>
-          <%= button_to "Destroy", @post, method: :delete,
-                data: { confirm: "Are you sure?" },
-                class: "bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition font-semibold" %>
+          <% user_like = @post.likes.find_by(user: current_user, like_type: "like") if user_signed_in? %>
+          <% user_dislike = @post.likes.find_by(user: current_user, like_type: "dislike") if user_signed_in? %>
+
+          <%= button_to post_likes_path(@post, like_type: "like"),
+              method: :post,
+              class: "px-4 py-2 flex items-center gap-2 hover:bg-[#3a3a3a] transition #{'bg-[#3f3f3f]' if user_like}" do %>
+            <i class="fas fa-thumbs-up text-white"></i>
+            <%= image_tag("pic.png", class: "w-5 h-5") %>
+            <span><%= @post.likes.where(like_type: "like").count %></span>
+          <% end %>
+
+          <div class="w-px h-6 bg-[#3f3f3f]"></div>
+
+          <%= button_to post_likes_path(@post, like_type: "dislike"),
+              method: :post,
+              class: "px-4 py-2 flex items-center gap-2 hover:bg-[#3a3a3a] transition #{'bg-[#3f3f3f]' if user_dislike}" do %>
+            <i class="fas fa-thumbs-down text-white"></i>
+            <%= image_tag("dislike.png", class: "w-5 h-5") %>
+            <span><%= @post.likes.where(like_type: "dislike").count %></span>
+          <% end %>
+
         </div>
       </div>
+
+      <div class="bg-[#272727] p-4 rounded-xl mb-6 border border-[#3f3f3f]">
+        <p class="text-gray-300 whitespace-pre-line"><%= @post.description %></p>
+      </div>
+
+      <div class="bg-[#272727] p-4 rounded-xl border border-[#3f3f3f]">
+        <h2 class="text-xl font-semibold mb-4 text-white">Comments (<%= @post.comments.count %>)</h2>
+
+        <% if user_signed_in? %>
+          <%= form_with model: [@post, Comment.new], local: true, class: "mb-6" do |f| %>
+            <div class="flex gap-2 items-center">
+              <%= f.text_field :body,
+                placeholder: "Add a comment...",
+                class: "flex-1 p-2 rounded-lg bg-[#121212] text-white border border-[#3f3f3f]" %>
+              <%= f.submit "Comment",
+                class: "px-4 py-2 rounded-lg bg-[#3f3f3f] text-white hover:bg-[#4a4a4a] transition" %>
+            </div>
+          <% end %>
+        <% end %>
+
+        <% @post.comments.where(parent_id: nil).each do |comment| %>
+          <div class="border-l-2 border-[#3f3f3f] pl-4 mb-6">
+            <p class="text-gray-200 font-semibold"><%= comment.user.email %></p>
+            <p class="text-gray-300 mb-2"><%= comment.body %></p>
+
+            <% comment.replies.each do |reply| %>
+              <div class="ml-6 border-l border-[#3f3f3f] pl-3 mt-2">
+                <p class="text-gray-400 text-sm font-semibold"><%= reply.user.email %></p>
+                <p class="text-gray-400 text-sm"><%= reply.body %></p>
+              </div>
+            <% end %>
+
+            <% if user_signed_in? %>
+              <%= form_with model: [@post, Comment.new], local: true, class: "mt-2 flex gap-2" do |f| %>
+                <%= f.hidden_field :parent_id, value: comment.id %>
+                <%= f.text_field :body,
+                  placeholder: "Reply...",
+                  class: "flex-1 p-2 rounded-lg bg-[#121212] text-white border border-[#3f3f3f]" %>
+                <%= f.submit "Reply",
+                  class: "px-3 py-1 rounded-lg bg-[#3f3f3f] text-white hover:bg-[#4a4a4a] transition" %>
+              <% end %>
+            <% end %>
+
+          </div>
+        <% end %>
+      </div>
+
     </div>
-
   </div>
-
-  <footer class="mt-8 text-center text-gray-500 text-xs">
-    <p>© 2025 YouTube0.2. All rights reserved.</p>
-  </footer>
 </div>

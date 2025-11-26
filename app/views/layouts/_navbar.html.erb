@@ -1,4 +1,5 @@
-<nav class="bg-black text-black px-4 py-3 shadow-md flex justify-between items-center">
+<nav class="fixed top-0 left-0 w-full z-50 bg-black px-4 py-3 shadow-md flex justify-between items-center text-white">
+
   
   <div class="flex items-center space-x-2">
     <%= link_to root_path, class: "flex items-center space-x-2" do %>
@@ -25,29 +26,40 @@
     </form>
   </div>
 
-  <div class="flex items-center space-x-4">
+  <div class="flex items-center space-x-5">
     <% if user_signed_in? %>
-      
-      <%= link_to new_post_path, class: "hover:text-white" do %>
+
+      <%= link_to new_post_path, class: "hover:text-gray-300 text-xl" do %>
         <i class="fas fa-video"></i>
       <% end %>
 
-      <i class="fas fa-bell hover:text-white"></i>
-      
-      <%= link_to edit_user_registration_path, class: "bg-gray-900 text-white px-3 py-1 rounded hover:bg-gray-800" do %>
-        <i class="fas fa-user-circle text-2xl"></i>
-        <span class="hidden md:block"><%= current_user.email %></span>
+      <%= link_to notifications_path, class: "relative cursor-pointer" do %>
+        <%= image_tag "bell.webp", class: "w-6 h-6" %>
+        <% unread = current_user.notifications.unread.count %>
+        <% if unread > 0 %>
+          <span class="absolute -top-1 -right-2 bg-red-600 text-white text-[11px] font-bold rounded-full px-[6px]">
+            <%= unread %>
+          </span>
+        <% end %>
       <% end %>
 
-      <%= link_to "Sign Out", destroy_user_session_path,
+      <%= link_to edit_user_registration_path, class: "text-sm bg-[#272727] px-3 py-1 rounded-full hover:bg-[#3a3a3a]" do %>
+        <i class="fas fa-user-circle text-2xl"></i>
+        <span class="hidden md:block text-sm"><%= current_user.email %></span>
+      <% end %>
+
+      <%= link_to "Sign Out",
+          destroy_user_session_path,
           data: { turbo_method: :delete },
-          class: "bg-gray-900 text-white px-3 py-1 rounded hover:bg-gray-800" %>
+          class: "text-sm bg-[#272727] px-3 py-1 rounded-full hover:bg-[#3a3a3a]"
+      %>
 
     <% else %>
-      
-      <%= link_to "Sign In", new_user_session_path,
-          class: "bg-gray-900 text-white px-3 py-1 rounded hover:bg-gray-800" %>
-
+      <%= link_to "Sign In",
+          new_user_session_path,
+          class: "text-sm bg-[#272727] px-3 py-1 rounded-full hover:bg-[#3a3a3a]"
+      %>
     <% end %>
   </div>
+
 </nav>
