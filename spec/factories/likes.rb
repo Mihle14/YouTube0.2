@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :like do
-    user { nil }
-    post { nil }
-    like_type { "MyString" }
+    like_type { "upvote" }
+    user { association :user }
+    post { association :post }
   end
 end

@@ -2,7 +2,20 @@
   <div class="flex flex-col md:flex-row gap-8 w-full max-w-[1280px] md:ml-60">
     <div class="flex-1 max-w-3xl">
 
-      
+      <div class="flex justify-end gap-4 mb-4">
+        <%= link_to edit_post_path(@post),
+            class: "px-4 py-2 rounded-md bg-gray-700 text-white hover:bg-gray-600 transition font-medium flex items-center gap-2" do %>
+          <i class="fas fa-pencil-alt"></i> Edit
+        <% end %>
+
+        <%= button_to post_path(@post),
+            method: :delete,
+            data: { confirm: 'Are you sure?' },
+            class: "px-4 py-2 rounded-md bg-gray-700 text-white hover:bg-gray-600 transition font-medium flex items-center gap-2" do %>
+          <i class="fas fa-trash"></i> Delete
+        <% end %>
+      </div>
+
       <div class="w-full mb-4">
         <% if @post.video.attached? %>
           <video controls class="w-full rounded-xl shadow-lg">
@@ -14,15 +27,12 @@
         <% end %>
       </div>
 
-     
       <h1 class="text-2xl md:text-3xl font-bold mb-2"><%= @post.title %></h1>
       <p class="text-gray-400 mb-4">Views: <%= @post.views %></p>
 
-      
       <div class="flex items-center justify-between mb-4">
         <div></div> 
         <div class="flex items-center bg-[#272727] rounded-full overflow-hidden border border-[#3f3f3f]">
-
           <% user_like = @post.likes.find_by(user: current_user, like_type: "like") if user_signed_in? %>
           <% user_dislike = @post.likes.find_by(user: current_user, like_type: "dislike") if user_signed_in? %>
 
@@ -43,7 +53,6 @@
             <%= image_tag("dislike.png", class: "w-5 h-5") %>
             <span><%= @post.likes.where(like_type: "dislike").count %></span>
           <% end %>
-
         </div>
       </div>
 
@@ -68,13 +77,33 @@
 
         <% @post.comments.where(parent_id: nil).each do |comment| %>
           <div class="border-l-2 border-[#3f3f3f] pl-4 mb-6">
-            <p class="text-gray-200 font-semibold"><%= comment.user.email %></p>
-            <p class="text-gray-300 mb-2"><%= comment.body %></p>
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="text-gray-200 font-semibold"><%= comment.user.email %></p>
+                <p class="text-gray-300 mb-2"><%= comment.body %></p>
+              </div>
+              <% if user_signed_in? %>
+                <%= button_to "Delete",
+                    post_comment_path(@post, comment),
+                    method: :delete,
+                    data: { confirm: "Are you sure?" },
+                    class: "text-red-500 hover:text-red-700 text-sm ml-2 px-2 py-1 rounded" %>
+              <% end %>
+            </div>
 
             <% comment.replies.each do |reply| %>
-              <div class="ml-6 border-l border-[#3f3f3f] pl-3 mt-2">
-                <p class="text-gray-400 text-sm font-semibold"><%= reply.user.email %></p>
-                <p class="text-gray-400 text-sm"><%= reply.body %></p>
+              <div class="ml-6 border-l border-[#3f3f3f] pl-3 mt-2 flex justify-between items-start">
+                <div>
+                  <p class="text-gray-400 text-sm font-semibold"><%= reply.user.email %></p>
+                  <p class="text-gray-400 text-sm"><%= reply.body %></p>
+                </div>
+                <% if user_signed_in? %>
+                  <%= button_to "Delete",
+                      post_comment_path(@post, reply),
+                      method: :delete,
+                      data: { confirm: "Are you sure?" },
+                      class: "text-red-500 hover:text-red-700 text-sm ml-2 px-2 py-1 rounded" %>
+                <% end %>
               </div>
             <% end %>
 
@@ -88,7 +117,6 @@
                   class: "px-3 py-1 rounded-lg bg-[#3f3f3f] text-white hover:bg-[#4a4a4a] transition" %>
               <% end %>
             <% end %>
-
           </div>
         <% end %>
       </div>

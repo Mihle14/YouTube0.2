@@ -1,6 +1,17 @@
 <nav class="fixed top-0 left-0 w-full z-50 bg-black px-4 py-3 shadow-md flex justify-between items-center text-white">
 
-  
+  <% if flash[:alert] %>
+    <div class="absolute top-16 left-1/2 -translate-x-1/2 bg-yellow-500 text-black px-4 py-2 rounded-xl shadow-lg text-sm font-semibold">
+      <%= flash[:alert] %>
+    </div>
+  <% end %>
+
+  <% if flash[:notice] %>
+    <div class="absolute top-16 left-1/2 -translate-x-1/2 bg-green-500 text-black px-4 py-2 rounded-xl shadow-lg text-sm font-semibold">
+      <%= flash[:notice] %>
+    </div>
+  <% end %>
+
   <div class="flex items-center space-x-2">
     <%= link_to root_path, class: "flex items-center space-x-2" do %>
       <%= image_tag "YouTube_icon.png" , alt: "YouTube Logo" , style: "height: 30px ; width: 50px" %>
@@ -8,23 +19,26 @@
     <% end %>
   </div>
 
-  <div class="flex-1 mx-4 max-w-md">
-    <form action="<%= posts_path %>" method="get" class="flex">
-      <input 
-      type="text" 
-      name="query" 
-      placeholder="Search" 
-      class="flex-1 px-4 py-2 rounded-l-full border border-gray-700 bg-gray-900 text-white focus:outline-none focus:border-white"
-    >
+  <div class="flex-1 mx-4 max-w-lg flex justify-center">
+    <form action="<%= posts_path %>" method="get"
+      class="flex items-center bg-[#272727] border border-gray-600 rounded-full px-5 py-2 w-full">
 
-    <button 
-      type="submit" 
-      class="px-4 py-2 bg-gray-800 border border-gray-700 rounded-r-full hover:bg-gray-700 flex items-center justify-center"
-    >
-      <i class="fas fa-search text-white"></i>
-    </button>
+      <input
+        type="text"
+        name="query"
+        placeholder="Search"
+        value="<%= params[:query] %>"
+        class="flex-1 bg-transparent text-white placeholder-gray-400 focus:outline-none text-lg"
+      >
+
+      <button type="submit" class="flex items-center justify-center pl-4">
+        <%= image_tag "search1.png", alt: "Search",
+          class: "h-6 w-6 opacity-70 hover:opacity-100 transition-transform hover:scale-110" %>
+      </button>
+
     </form>
   </div>
+
 
   <div class="flex items-center space-x-5">
     <% if user_signed_in? %>

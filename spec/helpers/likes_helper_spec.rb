@@ -10,6 +10,9 @@ require 'rails_helper'
 #     end
 #   end
 # end
+
 RSpec.describe LikesHelper, type: :helper do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it "does something useful" do
+    expect(helper).to be_a(LikesHelper)
+  end
 end

@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :post_view do
-    user { nil }
-    post { nil }
+    user { association :user }
+    post { association :post }
   end
 end

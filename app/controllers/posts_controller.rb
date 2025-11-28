@@ -2,7 +2,12 @@ class PostsController < ApplicationController
   before_action :set_post, only: %i[ show edit update destroy ]
 
   def index
-    @posts = Post.all
+    @posts =
+      if params[:query].present?
+        Post.search(params[:query]).order(created_at: :desc)
+      else
+        Post.order(created_at: :desc)
+      end
   end
 
   def show
@@ -48,13 +53,11 @@ class PostsController < ApplicationController
   end
 
   def destroy
-    @post.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to posts_path, notice: "Post was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
-    end
+    @post.destroy
+    redirect_to posts_path, notice: "Post was successfully deleted.", status: :see_other
   end
+
+
 
   private
 

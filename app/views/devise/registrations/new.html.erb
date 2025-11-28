@@ -14,6 +14,19 @@
     <h2 class="text-center text-xl font-bold mb-6">Create your account</h2>
 
     <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+
+      <div class="mb-4">
+        <%= f.label :name, "Name", class: "block text-sm font-medium mb-1" %>
+        <%= f.text_field :name, placeholder: "Enter your name",
+          class: "w-full p-2 rounded bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-red-500" %>
+      </div>
+
+      <div class="mb-4">
+        <%= f.label :surname, "Surname", class: "block text-sm font-medium mb-1" %>
+        <%= f.text_field :surname, placeholder: "Enter your surname",
+          class: "w-full p-2 rounded bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-red-500" %>
+      </div>
+
       <div class="mb-4">
         <%= f.label :email, class: "block text-sm font-medium mb-1" %>
         <%= f.email_field :email, autofocus: true, class: "w-full p-2 rounded bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-red-500" %>

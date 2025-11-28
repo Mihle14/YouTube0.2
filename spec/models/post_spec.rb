@@ -1,18 +1,20 @@
 require 'rails_helper'
 
 RSpec.describe Post, type: :model do
-  it "can be created" do
-    post = Post.new
-    expect(post).to be_a(Post)
-  end
+  it { should belong_to(:user).optional }
+  it { should have_many(:comments).dependent(:destroy) }
+  it { should have_many(:likes).dependent(:destroy) }
+  it { should have_many(:notifications).dependent(:destroy) }
+  it { should have_many(:post_views).dependent(:destroy) }
+  it { should have_many(:viewers).through(:post_views).source(:user) }
 
-  it "can have an attached image" do
-    post = Post.new
-    post.image.attach(
-      io: File.open(Rails.root.join("spec/fixtures/files/test_image.png")),
-      filename: "test_image.png",
-      content_type: "image/png"
-    )
-    expect(post.image).to be_attached
+  it { should validate_presence_of(:title) }
+
+  describe "callbacks" do
+    it "sets default views on initialize" do
+      post = Post.new
+      expect(post.views).to eq(0)
+    end
   end
 end
+

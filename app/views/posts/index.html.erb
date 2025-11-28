@@ -1,17 +1,29 @@
 <div class="bg-black min-h-screen text-white py-10">
+
+  <% if params[:query].present? %>
+    <h2 class="text-xl font-bold text-center mb-6">
+      Search results for: "<%= params[:query] %>"
+    </h2>
+  <% end %>
+
   <p class="text-green-500 text-center mb-4"><%= notice %></p>
 
   <h1 class="text-3xl font-bold text-center mb-8">Posts</h1>
 
   <div class="max-w-6xl mx-auto px-4 ml-64">
-    <div id="posts" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center">
+    <div id="posts"
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center">
+
       <% @posts.each do |post| %>
         <%= render post %>
       <% end %>
+
     </div>
 
     <div class="text-center mt-10">
-      <%= link_to "New post", new_post_path, class: "bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg" %>
+      <%= link_to "New post", new_post_path,
+        class: "bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg" %>
     </div>
+
   </div>
 </div>

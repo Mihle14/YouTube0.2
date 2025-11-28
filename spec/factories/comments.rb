@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :comment do
-    body { "MyText" }
-    user { nil }
-    video { nil }
-    parent_id { "" }
+    body { "Sample comment" }
+    association :user
+    association :post
   end
 end
+
