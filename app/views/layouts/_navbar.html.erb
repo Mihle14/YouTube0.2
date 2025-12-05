@@ -1,28 +1,27 @@
 <nav class="fixed top-0 left-0 w-full z-50 bg-black px-4 py-3 shadow-md flex justify-between items-center text-white">
 
   <% if flash[:alert] %>
-    <div class="absolute top-16 left-1/2 -translate-x-1/2 bg-yellow-500 text-black px-4 py-2 rounded-xl shadow-lg text-sm font-semibold">
+    <div class="fixed top-16 left-1/2 -translate-x-1/2 bg-yellow-500 text-black px-4 py-2 rounded-xl shadow-lg text-sm font-semibold">
       <%= flash[:alert] %>
     </div>
   <% end %>
 
   <% if flash[:notice] %>
-    <div class="absolute top-16 left-1/2 -translate-x-1/2 bg-green-500 text-black px-4 py-2 rounded-xl shadow-lg text-sm font-semibold">
+    <div class="fixed top-16 left-1/2 -translate-x-1/2 bg-green-500 text-black px-4 py-2 rounded-xl shadow-lg text-sm font-semibold">
       <%= flash[:notice] %>
     </div>
   <% end %>
 
   <div class="flex items-center space-x-2">
     <%= link_to root_path, class: "flex items-center space-x-2" do %>
-      <%= image_tag "YouTube_icon.png" , alt: "YouTube Logo" , style: "height: 30px ; width: 50px" %>
+      <%= image_tag "YouTube_icon.png", alt: "logo", class: "h-[30px] w-[50px]" %>
       <span class="text-white font-bold text-lg">YouTube0.2</span>
     <% end %>
   </div>
 
-  <div class="flex-1 mx-4 max-w-lg flex justify-center">
-    <form action="<%= posts_path %>" method="get"
-      class="flex items-center bg-[#272727] border border-gray-600 rounded-full px-5 py-2 w-full">
 
+  <div class="flex-1 mx-4 max-w-lg flex justify-center">
+    <form action="<%= posts_path %>" method="get" class="flex items-center bg-[#272727] border border-gray-600 rounded-full px-5 py-2 w-full">
       <input
         type="text"
         name="query"
@@ -30,26 +29,28 @@
         value="<%= params[:query] %>"
         class="flex-1 bg-transparent text-white placeholder-gray-400 focus:outline-none text-lg"
       >
-
       <button type="submit" class="flex items-center justify-center pl-4">
-        <%= image_tag "search1.png", alt: "Search",
-          class: "h-6 w-6 opacity-70 hover:opacity-100 transition-transform hover:scale-110" %>
+        <%= image_tag "search1.png", alt: "search", class: "h-6 w-6 opacity-70 hover:opacity-100 transition-transform hover:scale-110" %>
       </button>
-
     </form>
   </div>
 
-
   <div class="flex items-center space-x-5">
     <% if user_signed_in? %>
+
 
       <%= link_to new_post_path, class: "hover:text-gray-300 text-xl" do %>
         <i class="fas fa-video"></i>
       <% end %>
 
+      <%= link_to new_post_path, class: "bg-[#272727] px-10 py-3 rounded-full hover:bg-[#3a3a3a] flex items-center gap-3 font-medium" do %>
+        <span class="text-2xl leading-none">+</span>
+        <span>Create</span>
+      <% end %>
+
+      <% unread = current_user.notifications.where(read: false).count %>
       <%= link_to notifications_path, class: "relative cursor-pointer" do %>
-        <%= image_tag "bell.webp", class: "w-6 h-6" %>
-        <% unread = current_user.notifications.unread.count %>
+        <i class="text-xl fas fa-bell"></i>
         <% if unread > 0 %>
           <span class="absolute -top-1 -right-2 bg-red-600 text-white text-[11px] font-bold rounded-full px-[6px]">
             <%= unread %>
@@ -57,23 +58,51 @@
         <% end %>
       <% end %>
 
-      <%= link_to edit_user_registration_path, class: "text-sm bg-[#272727] px-3 py-1 rounded-full hover:bg-[#3a3a3a]" do %>
-        <i class="fas fa-user-circle text-2xl"></i>
-        <span class="hidden md:block text-sm"><%= current_user.email %></span>
-      <% end %>
+      <%= turbo_stream_from "notifications_#{current_user.id}" %>
 
-      <%= link_to "Sign Out",
-          destroy_user_session_path,
-          data: { turbo_method: :delete },
-          class: "text-sm bg-[#272727] px-3 py-1 rounded-full hover:bg-[#3a3a3a]"
-      %>
+        <div class="relative">
+          <% avatar_url = current_user.channel&.avatar&.attached? ? current_user.channel.avatar : "avatar.avif" %>
+          <%= image_tag avatar_url,
+                class: "w-10 h-10 rounded-full cursor-pointer",
+                id: "profile-dropdown-button" %>
 
+          <div id="profile-dropdown-content" class="hidden absolute right-0 mt-2 w-48 bg-[#272727] text-white rounded-md shadow-lg py-2 z-50">
+            <% if current_user.channel %>
+              <%= link_to "View Channel", channel_path(current_user.channel), class: "block px-4 py-2 hover:bg-gray-700" %>
+              <%= link_to "Edit Channel", edit_channel_path(current_user.channel), class: "block px-4 py-2 hover:bg-gray-700" %>
+            <% else %>
+              <%= link_to "Create Channel", new_channel_path, class: "block px-4 py-2 hover:bg-gray-700" %>
+            <% end %>
+
+            <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "block w-full px-4 py-2 text-left hover:bg-gray-700" %>
+          </div>
+        </div>
     <% else %>
-      <%= link_to "Sign In",
-          new_user_session_path,
-          class: "text-sm bg-[#272727] px-3 py-1 rounded-full hover:bg-[#3a3a3a]"
-      %>
+      <%= link_to "Sign In", new_user_session_path, class: "bg-[#272727] px-3 py-1 rounded-full hover:bg-[#3a3a3a]" %>
     <% end %>
   </div>
 
 </nav>
+
+<script>
+function setupProfileDropdown() {
+  const btn = document.getElementById("profile-dropdown-button");
+  const drop = document.getElementById("profile-dropdown-content");
+
+  if (!btn || !drop) return;
+
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation(); 
+    drop.classList.toggle("hidden");
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!btn.contains(e.target) && !drop.contains(e.target)) {
+      drop.classList.add("hidden");
+    }
+  });
+}
+
+document.addEventListener("turbo:load", setupProfileDropdown);
+document.addEventListener("DOMContentLoaded", setupProfileDropdown);
+</script>

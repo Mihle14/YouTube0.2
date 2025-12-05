@@ -5,6 +5,11 @@ Rails.application.routes.draw do
     resources :comments, only: [:create, :destroy]
     resources :likes, only: [:create, :destroy]
   end
+
+  resources :channels, only: [:new, :create, :show, :edit, :update] do
+    resources :subscriptions, only: [:create, :destroy]
+  end
+  
   resources :notifications, only: [:index] do
     member do
       patch :mark_as_read

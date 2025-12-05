@@ -1,0 +1,107 @@
+<div class="flex bg-black min-h-screen pt-16">
+  <div class="w-64 flex-shrink-0"></div>
+  <div class="flex-1">
+    <% if @channel.banner.attached? %>
+      <%= image_tag @channel.banner, class: "w-full h-[220px] object-cover" %>
+    <% else %>
+      <div class="w-full h-[220px] bg-[#181818] flex items-center justify-center text-gray-500 text-xl">
+        No Banner Yet
+      </div>
+    <% end %>
+
+    <div class="max-w-6xl mx-auto px-6">
+
+      <div class="flex items-center gap-6 -mt-[60px]">
+        <% if @channel.avatar.attached? %>
+          <%= image_tag @channel.avatar, class: "w-[120px] h-[120px] rounded-full border-4 border-black object-cover bg-black shadow-lg" %>
+        <% else %>
+          <%= image_tag "avatar.avif", class: "w-[120px] h-[120px] rounded-full border-4 border-black object-cover bg-black shadow-lg" %>
+        <% end %>
+
+        <div class="mt-15">
+          <h1 class="text-3xl font-bold text-white"><%= @channel.name %></h1>
+          <p class="text-gray-400 text-base max-w-2xl"><%= @channel.description %></p>
+
+          <div class="text-gray-400 flex items-center gap-3 mt-1 text-sm">
+            <span>0 videos</span>
+            <span>•</span>
+            <span>0 subscribers</span>
+            <span>•</span>
+            <span>Joined <%= @channel.created_at.strftime("%b %d, %Y") %></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4 mt-4">
+        <% if user_signed_in? && current_user == @channel.user %>
+          <%= link_to "Customize Channel",
+                edit_channel_path(@channel),
+                class: "px-4 py-2 bg-[#272727] rounded-full hover:bg-[#3a3a3a] transition text-sm font-medium" %>
+
+          <%= link_to "Upload Posts",
+                new_post_path(channel_id: @channel.id),
+                class: "px-4 py-2 bg-[#272727] rounded-full hover:bg-[#3a3a3a] transition text-sm font-medium" %>
+
+        <% else %>
+          <%= link_to "Subscribe",
+                channel_subscriptions_path(@channel),
+                method: :post,
+                class: "px-6 py-2 bg-white text-black rounded-full font-medium text-sm hover:opacity-90" %>
+
+        <% end %>
+
+      </div>
+
+
+      <div class="border-b border-gray-700 mt-6 flex gap-8 text-sm font-medium">
+        <button class="border-b-2 border-white pb-3">Home</button>
+        <button class="text-gray-400 hover:text-white">Videos</button>
+        <button class="text-gray-400 hover:text-white">Playlists</button>
+        <button class="text-gray-400 hover:text-white">About</button>
+      </div>
+
+      <section class="pt-6">
+        <h2 class="text-xl font-semibold mb-4 text-white">Uploads</h2>
+
+        <% if @posts.any? %>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <% @posts.each do |post| %>
+              <%= link_to post_path(post), class: "block bg-[#0f0f0f] rounded-xl overflow-hidden hover:bg-[#212121] transition-shadow shadow-md" do %>
+
+                <% if post.thumbnail.attached? %>
+                  <%= image_tag post.thumbnail, class: "w-full h-[150px] object-cover" %>
+                <% elsif post.video.attached? %>
+                  <%= image_tag post.video.preview(resize_to_fill: [300, 150]).processed, class: "w-full h-[150px] object-cover" %>
+                <% else %>
+                  <div class="w-full h-[150px] bg-[#181818] flex items-center justify-center text-gray-600">
+                    No Preview
+                  </div>
+                <% end %>
+
+                <div class="p-3">
+                  <span class="line-clamp-2 text-sm font-medium text-white"><%= post.title %></span>
+                  <div class="text-xs text-gray-400 mt-2">
+                    <span><%= time_ago_in_words(post.created_at) %> ago</span>
+                  </div>
+                </div>
+
+              <% end %>
+            <% end %>
+          </div>
+
+        <% else %>
+          <div class="text-center mt-10 text-gray-500">
+            <i class="fas fa-video text-6xl mb-4"></i>
+            <p class="text-lg font-semibold">No videos uploaded yet</p>
+            <p class="text-sm">Start creating content!</p>
+
+            <% if user_signed_in? && current_user == @channel.user %>
+              <%= link_to "Upload Video", new_post_path, class: "mt-6 inline-block px-6 py-2 bg-white text-black rounded-full font-medium text-sm hover:opacity-90" %>
+            <% end %>
+          </div>
+        <% end %>
+      </section>
+
+    </div>
+  </div>
+</div>

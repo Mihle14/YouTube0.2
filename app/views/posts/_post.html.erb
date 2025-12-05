@@ -25,6 +25,12 @@
       <p class="text-gray-400 text-sm line-clamp-2"><%= post.description %></p>
     </div>
 
+    <% if post.channel.present? %>
+      <%= link_to post.channel.name, channel_path(post.channel), class: "text-blue-400 text-sm hover:text-blue-300" %>
+    <% else %>
+      <span class="text-gray-500 text-sm">No Channel</span>
+    <% end %>
+
     <div class="flex justify-between items-center text-gray-400 text-xs mt-auto">
       <div class="flex gap-4 items-center">
         <span>Views: <%= post.views || 0 %></span>

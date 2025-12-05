@@ -8,13 +8,14 @@ class CommentsController < ApplicationController
     @comment.user = current_user
 
     if @comment.save
-      if @post.user != current_user
+      if @post.user && @post.user != current_user
         Notification.create!(
           user: @post.user,
           post: @post,
-          message: "#{current_user.email} commented on your post",
+          notification_type: "commented",
           read: false
         )
+        flash[:alert] = "New comment on your post!"
       end
 
       redirect_to post_path(@post), notice: "Comment added!"

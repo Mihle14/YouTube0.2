@@ -28,6 +28,8 @@ class PostsController < ApplicationController
 
   def create
     @post = Post.new(post_params)
+    @post.user = current_user            
+    @post.channel = current_user.channel 
 
     respond_to do |format|
       if @post.save
@@ -39,6 +41,7 @@ class PostsController < ApplicationController
       end
     end
   end
+
 
   def update
     respond_to do |format|
