@@ -46,19 +46,21 @@
         <% else %>
 
           <% if user_signed_in? %>
-            <% existing_subscription = current_user.subscriptions.find_by(channel: @channel) %>
+            <turbo-frame id="subscription-frame">
+              <% existing_subscription = current_user.subscriptions.find_by(channel: @channel) %>
 
-            <% if existing_subscription %>
-              <%= button_to "Unsubscribe",
-                    channel_subscription_path(@channel, existing_subscription),
-                    method: :delete,
-                    class: "px-6 py-2 bg-red-500 text-white rounded-full font-medium text-sm hover:opacity-90" %>
-            <% else %>
-              <%= button_to "Subscribe",
-                    channel_subscriptions_path(@channel),
-                    method: :post,
-                    class: "px-6 py-2 bg-white text-black rounded-full font-medium text-sm hover:opacity-90" %>
-            <% end %>
+              <% if existing_subscription %>
+                <%= button_to "Unsubscribe",
+                      channel_subscription_path(@channel, existing_subscription),
+                      method: :delete,
+                      class: "px-6 py-2 bg-red-500 text-white rounded-full font-medium text-sm hover:opacity-90" %>
+              <% else %>
+                <%= button_to "Subscribe",
+                      channel_subscriptions_path(@channel),
+                      method: :post,
+                      class: "px-6 py-2 bg-white text-black rounded-full font-medium text-sm hover:opacity-90" %>
+              <% end %>
+            </turbo-frame>
           <% end %>
         <% end %>
       </div>
