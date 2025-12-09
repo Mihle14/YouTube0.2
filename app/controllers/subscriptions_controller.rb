@@ -4,13 +4,13 @@ class SubscriptionsController < ApplicationController
 
   def create
     current_user.subscriptions.create(channel: @channel)
-    redirect_to @channel
+    render partial: "subscriptions/button", locals: { channel: @channel }
   end
 
   def destroy
     subscription = current_user.subscriptions.find_by(channel: @channel)
     subscription&.destroy
-    redirect_to @channel
+    render partial: "subscriptions/button", locals: { channel: @channel }
   end
 
   private
