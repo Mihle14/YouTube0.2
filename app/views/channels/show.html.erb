@@ -26,7 +26,7 @@
           <div class="text-gray-400 flex items-center gap-3 mt-1 text-sm">
             <span><%=@channel.posts.count%> videos</span>
             <span>•</span>
-            <span id="subscriber-count"><%= @channel.subscriptions.count %> subscribers</span>
+            <%= render "subscriber_count", channel: @channel %>
             <span>•</span>
             <span>Joined <%= @channel.created_at.strftime("%b %d, %Y") %></span>
           </div>
