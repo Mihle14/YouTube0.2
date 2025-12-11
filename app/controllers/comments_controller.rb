@@ -9,24 +9,29 @@ class CommentsController < ApplicationController
 
     if @comment.save
       if @post.user && @post.user != current_user
-        Notification.create!(
-          user: @post.user,
-          post: @post,
-          notification_type: "commented",
-          read: false
-        )
-        flash[:alert] = "New comment on your post!"
+        Notification.create!(user: @post.user, post: @post, notification_type: "commented", read: false)
       end
 
-      redirect_to post_path(@post), notice: "Comment added!"
+      respond_to do |format|
+        format.html { redirect_to post_path(@post), notice: "Comment added!" }
+        format.turbo_stream
+      end
     else
-      redirect_to post_path(@post), alert: "Failed to add comment."
+      respond_to do |format|
+        format.html { redirect_to post_path(@post), alert: "Failed to add comment." }
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("comment_form", partial: "comments/form", locals: { comment: @comment }) }
+      end
     end
   end
 
+
   def destroy
     @comment.destroy
-    redirect_to post_path(@post), notice: "Comment deleted!"
+
+    respond_to do |format|
+      format.html { redirect_to post_path(@post), notice: "Comment deleted!" }
+      format.turbo_stream
+    end
   end
 
   private

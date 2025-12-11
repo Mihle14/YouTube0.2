@@ -45,8 +45,13 @@
       <div class="bg-[#272727] p-4 rounded-xl border border-[#3f3f3f]">
         <h2 class="text-xl font-semibold mb-4 text-white">Comments (<%= @post.comments.count %>)</h2>
 
+        <div id="comments">
+          <%= turbo_frame_tag "comments" do %>
+            <%= render @post.comments.where(parent_id: nil) %>
+          <% end %>
+        </div>
         <% if user_signed_in? %>
-          <%= form_with model: [@post, Comment.new], local: true, class: "mb-6" do |f| %>
+          <%= form_with model: [@post, Comment.new], local: false, class: "mb-6" do |f| %>
             <div class="flex gap-2 items-center">
               <%= f.text_field :body,
                 placeholder: "Add a comment...",
@@ -90,7 +95,7 @@
             <% end %>
 
             <% if user_signed_in? %>
-              <%= form_with model: [@post, Comment.new], local: true, class: "mt-2 flex gap-2" do |f| %>
+              <%= form_with model: [@post, Comment.new], local: false, class: "mt-2 flex gap-2" do |f| %>
                 <%= f.hidden_field :parent_id, value: comment.id %>
                 <%= f.text_field :body,
                   placeholder: "Reply...",
