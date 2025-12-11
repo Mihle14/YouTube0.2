@@ -6,7 +6,7 @@
         <p class="text-gray-300 mb-2"><%= comment.body %></p>
       </div>
 
-      <% if user_signed_in? %>
+      <% if local_assigns[:current_user].present? %>
         <%= button_to "Delete",
             post_comment_path(comment.post, comment),
             method: :delete,
@@ -16,10 +16,10 @@
     </div>
 
     <% comment.replies.each do |reply| %>
-      <%= render partial: "comments/comment", locals: { comment: reply } %>
+      <%= render partial: "comments/comment", locals: { comment: reply, current_user: local_assigns[:current_user] } %>
     <% end %>
 
-    <% if user_signed_in? %>
+    <% if local_assigns[:current_user].present? %>
       <%= form_with model: [comment.post, Comment.new], local: false, data: { turbo_frame: dom_id(comment) }, class: "mt-2 flex gap-2" do |f| %>
         <%= f.hidden_field :parent_id, value: comment.id %>
         <%= f.text_field :body,

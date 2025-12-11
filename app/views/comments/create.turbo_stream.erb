@@ -1,7 +1,7 @@
-<%= turbo_stream.append "comments" do %>
-  <%= render @comment %>
-<% end %>
+<%= turbo_stream.prepend "comments", partial: "comments/comment", locals: { comment: @comment, current_user: current_user } %>
 
 <%= turbo_stream.update "comments_count" do %>
   <%= @post.comments.count %>
 <% end %>
+
+<%= turbo_stream.append "comments", "<script>document.getElementById('comments').scrollTop = 0;</script>".html_safe %>
