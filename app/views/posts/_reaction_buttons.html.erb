@@ -1,0 +1,20 @@
+<turbo-frame id="reaction_buttons_<%= post.id %>_<%= current_user.id %>">
+  <% user_reaction = post.likes.find_by(user: current_user) %>
+  <div class="flex items-center gap-1">
+
+    <%= button_to post_likes_path(post, like_type: "like"),
+        method: :post,
+        class: "flex items-center gap-1 px-4 py-1 rounded-full hover:bg-[#3a3a3a] transition #{'bg-[#3f51b5]' if user_reaction&.like_type == 'like'}" do %>
+      <%= image_tag("pic.png", class: "w-5 h-5") %>
+      <span class="text-sm font-medium text-white"><%= post.likes.where(like_type: "like").count %></span>
+    <% end %>
+
+    <%= button_to post_likes_path(post, like_type: "dislike"),
+        method: :post,
+        class: "flex items-center gap-1 px-4 py-1 rounded-full hover:bg-[#3a3a3a] transition #{'bg-[#3f51b5]' if user_reaction&.like_type == 'dislike'}" do %>
+      <%= image_tag("dislike.png", class: "w-5 h-5") %>
+      <span class="text-sm font-medium text-white"><%= post.likes.where(like_type: "dislike").count %></span>
+    <% end %>
+
+  </div>
+</turbo-frame>
