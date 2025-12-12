@@ -1,6 +1,7 @@
+# app/controllers/comments_controller.rb
 class CommentsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_post, only: [:create, :destroy]
+  before_action :set_post
   before_action :set_comment, only: [:destroy]
 
   def create
@@ -8,17 +9,10 @@ class CommentsController < ApplicationController
     @comment.user = current_user
 
     if @comment.save
-      if @post.user && @post.user != current_user
-        Notification.create!(
-          user: @post.user,
-          post: @post,
-          notification_type: "commented",
-          read: false
-        )
-        flash[:alert] = "New comment on your post!"
+      respond_to do |format|
+        format.html { redirect_to post_path(@post), notice: "Comment added!" }
+        format.turbo_stream
       end
-
-      redirect_to post_path(@post), notice: "Comment added!"
     else
       redirect_to post_path(@post), alert: "Failed to add comment."
     end
@@ -26,7 +20,10 @@ class CommentsController < ApplicationController
 
   def destroy
     @comment.destroy
-    redirect_to post_path(@post), notice: "Comment deleted!"
+    respond_to do |format|
+      format.html { redirect_to post_path(@post), notice: "Comment deleted!" }
+      format.turbo_stream
+    end
   end
 
   private

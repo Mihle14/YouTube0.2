@@ -1,3 +1,4 @@
+<%= turbo_stream_from @channel %>
 <div class="flex bg-black min-h-screen pt-16">
   <div class="w-64 flex-shrink-0"></div>
   <div class="flex-1">
@@ -25,7 +26,7 @@
           <div class="text-gray-400 flex items-center gap-3 mt-1 text-sm">
             <span><%=@channel.posts.count%> videos</span>
             <span>•</span>
-            <span id="subscriber-count"><%= @channel.subscriptions.count %> subscribers</span>
+            <%= render "subscriber_count", channel: @channel %>
             <span>•</span>
             <span>Joined <%= @channel.created_at.strftime("%b %d, %Y") %></span>
           </div>

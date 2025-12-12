@@ -1,0 +1,17 @@
+<% if @comment.parent_id.present? %>
+  <%= turbo_stream.append "replies-#{@comment.parent_id}" do %>
+    <%= render partial: "comments/comment", locals: { comment: @comment, current_user: current_user } %>
+  <% end %>
+<% else %>
+  <%= turbo_stream.prepend "comments" do %>
+    <%= render partial: "comments/comment", locals: { comment: @comment, current_user: current_user } %>
+  <% end %>
+<% end %>
+
+<%= turbo_stream.update "comments_count" do %>
+  <%= @post.comments.count %>
+<% end %>
+
+<%= turbo_stream.append "comments" do %>
+  <%= "<script>document.getElementById('comments').scrollTop = 0;</script>".html_safe %>
+<% end %>
