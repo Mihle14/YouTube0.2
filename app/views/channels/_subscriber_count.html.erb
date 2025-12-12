@@ -1,5 +1,3 @@
-<%= turbo_frame_tag "subscriber-count" do %>
-  <span class="text-white">
-    <%= channel.subscriptions.count %> subscribers
-  </span>
-<% end %>
+<turbo-frame id="subscriber_count">
+  <p><%= @channel.subscriptions.count %> subscribers</p>
+</turbo-frame>

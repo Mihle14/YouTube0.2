@@ -4,14 +4,13 @@ class SubscriptionsController < ApplicationController
 
   def create
     @subscription = current_user.subscriptions.create(channel: @channel)
-    broadcast_subscriber_count
 
     render partial: "subscriptions/button", locals: { channel: @channel }
   end
 
   def destroy
     @subscription = current_user.subscriptions.find_by(channel: @channel)
-    subscription&.destroy
+    @subscription&.destroy
     render partial: "subscriptions/button", locals: { channel: @channel }
   end
 
