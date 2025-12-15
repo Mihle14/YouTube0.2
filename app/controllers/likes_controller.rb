@@ -3,31 +3,31 @@ class LikesController < ApplicationController
   before_action :set_post
 
   def create
-  like_type = params[:like_type]
+    like_type = params[:like_type]
 
-  @like = @post.likes.find_or_initialize_by(user: current_user)
-  @like.like_type = like_type
-  @like.save!
+    @like = @post.likes.find_or_initialize_by(user: current_user)
+    @like.like_type = like_type
+    @like.save!
 
-  if @post.user && @post.user != current_user
-    case like_type
-    when "like"
-      Notification.create!(
-        user: @post.user,
-        post: @post,
-        notification_type: "liked",
-        read: false
-      )
-      flash[:notice] = "Someone liked your post!"
-    when "dislike"
-      Notification.create!(
-        user: @post.user,
-        post: @post,
-        notification_type: "disliked",
-        read: false
-      )
-      flash[:notice] = "Someone disliked your post!"
-    end
+    if @post.user && @post.user != current_user
+      case like_type
+      when "like"
+        Notification.create!(
+          user: @post.user,
+          post: @post,
+          notification_type: "liked",
+          read: false
+        )
+        flash[:notice] = "Someone liked your post!"
+      when "dislike"
+        Notification.create!(
+          user: @post.user,
+          post: @post,
+          notification_type: "disliked",
+          read: false
+        )
+        flash[:notice] = "Someone disliked your post!"
+      end
   end
 
   respond_to do |format|

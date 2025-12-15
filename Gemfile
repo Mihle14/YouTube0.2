@@ -40,7 +40,9 @@ gem "jbuilder"
 gem "tzinfo-data", platforms: %i[ mswin mswin64 mingw x64_mingw jruby ]
 
 # Reduces boot times through caching; required in config/boot.rb
-gem "bootsnap", require: false
+gem 'bootsnap', '~> 1.19', require: false
+
+
 
 gem 'devise'
 
