@@ -1,0 +1,15 @@
+detectors:
+  IrresponsibleModule:
+    enabled: false
+
+  InstanceVariableAssumption:
+    enabled: false
+
+  TooManyStatements:
+    max_statements: 10
+
+exclude_paths:
+  - db/migrate
+  - app/helpers
+  - test
+  - config
