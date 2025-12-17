@@ -11,13 +11,10 @@ class PostsController < ApplicationController
   end
 
   def show
-    @post.increment!(:views)
+    Posts::TrackView.new(post: @post, user: current_user).call
     @comments = @post.comments.includes(:user, :replies)
-
-    if user_signed_in?
-      PostView.find_or_create_by!(user: current_user, post: @post)
-    end
   end
+
 
   def new
     @post = Post.new
