@@ -4,25 +4,13 @@ class CommentsController < ApplicationController
   before_action :set_comment, only: [:destroy]
 
   def create
-    @comment = @post.comments.new(comment_params)
-    @comment.user = current_user
-
-    if @comment.save
-      respond_to do |format|
-        format.html { redirect_to post_path(@post), notice: "Comment added!" }
-        format.turbo_stream
-      end
-    else
-      redirect_to post_path(@post), alert: "Failed to add comment."
-    end
+    @comment = Comments::Create.new(post: @post, user: current_user, params: comment_params).call.comment
+    Comments::Response.new(self, @comment, @post).call(:create)
   end
 
   def destroy
-    @comment.destroy
-    respond_to do |format|
-      format.html { redirect_to post_path(@post), notice: "Comment deleted!" }
-      format.turbo_stream
-    end
+    Comments::Destroy.new(comment: @comment).call
+    Comments::Response.new(self, @comment, @post).call(:destroy)
   end
 
   private
