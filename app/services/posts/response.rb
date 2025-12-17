@@ -6,13 +6,25 @@ module Posts
     end
 
     def call
+      errors = @post.errors
+      persisted_or_valid = @post.persisted? || errors.empty?
+
       @controller.respond_to do |format|
-        if @post.persisted? || @post.errors.empty?
-          format.html { @controller.redirect_to @post, notice: "Post was successfully saved." }
-          format.json { @controller.render :show, status: :ok, location: @post }
-        else
-          format.html { @controller.render @controller.action_name == 'create' ? :new : :edit, status: :unprocessable_entity }
-          format.json { @controller.render json: @post.errors, status: :unprocessable_entity }
+        format.html do
+          if persisted_or_valid
+            @controller.redirect_to @post, notice: "Post was successfully saved."
+          else
+            action = @controller.action_name.to_sym
+            @controller.render action, status: :unprocessable_entity
+          end
+        end
+
+        format.json do
+          if persisted_or_valid
+            @controller.render :show, status: :ok, location: @post
+          else
+            @controller.render json: errors, status: :unprocessable_entity
+          end
         end
       end
     end

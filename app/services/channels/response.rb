@@ -5,12 +5,14 @@ module Channels
       @channel = channel
     end
 
-    def call(action = :create)
+    def call
       @controller.respond_to do |format|
-        if @channel.persisted? || @channel.errors.empty?
-          format.html { @controller.redirect_to @channel, notice: "Channel #{action}d successfully." }
-        else
-          format.html { @controller.render action == :create ? :new : :edit, status: :unprocessable_entity }
+        format.html do
+          if @channel.persisted? || @channel.errors.empty?
+            @controller.redirect_to @channel, notice: "Channel saved successfully."
+          else
+            @controller.render @controller.action_name.to_sym, status: :unprocessable_entity
+          end
         end
       end
     end
