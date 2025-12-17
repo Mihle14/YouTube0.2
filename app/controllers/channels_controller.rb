@@ -11,12 +11,8 @@ class ChannelsController < ApplicationController
   end
 
   def create
-    @channel = current_user.build_channel(channel_params)
-    if @channel.save
-      redirect_to @channel, notice: "Channel created successfully."
-    else
-      render :new
-    end
+    @channel = Channels::Create.new(user: current_user, params: channel_params).call.channel
+    Channels::Response.new(self, @channel).call(:create)
   end
 
   def edit
@@ -24,11 +20,8 @@ class ChannelsController < ApplicationController
   end
 
   def update
-    if @channel.update(channel_params)
-      redirect_to @channel, notice: "Channel updated!"
-    else
-      render :edit
-    end
+    @channel = Channels::Update.new(channel: @channel, params: channel_params).call.channel
+    Channels::Response.new(self, @channel).call(:update)
   end
 
   private
