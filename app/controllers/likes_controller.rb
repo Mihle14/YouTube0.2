@@ -3,46 +3,25 @@ class LikesController < ApplicationController
   before_action :set_post
 
   def create
-    like_type = params[:like_type]
+    Likes::ReactionsToPost.new(
+      post: @post,
+      user: current_user,
+      like_type: params[:like_type]
+    ).call
 
-    @like = @post.likes.find_or_initialize_by(user: current_user)
-    @like.like_type = like_type
-    @like.save!
-
-    if @post.user && @post.user != current_user
-      case like_type
-      when "like"
-        Notification.create!(
-          user: @post.user,
-          post: @post,
-          notification_type: "liked",
-          read: false
-        )
-        flash[:notice] = "Someone liked your post!"
-      when "dislike"
-        Notification.create!(
-          user: @post.user,
-          post: @post,
-          notification_type: "disliked",
-          read: false
-        )
-        flash[:notice] = "Someone disliked your post!"
+    respond_to do |format|
+      format.html { redirect_to @post }
+      format.turbo_stream do
+        broadcast_reaction_counts
+        replace_user_reaction_buttons
       end
-  end
-
-  respond_to do |format|
-    format.html { redirect_to @post }
-    format.turbo_stream do
-      broadcast_reaction_counts
-      replace_user_reaction_buttons
     end
+  rescue ArgumentError
+    redirect_to @post, alert: "Invalid reaction"
   end
-end
-
 
   def destroy
-    @like = @post.likes.find_by(user: current_user)
-    @like&.destroy
+    @post.likes.find_by(user: current_user)&.destroy
 
     respond_to do |format|
       format.html { redirect_to @post }
