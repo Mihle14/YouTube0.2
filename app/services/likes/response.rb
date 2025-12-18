@@ -1,3 +1,6 @@
+# Service object to handle controller responses for like/dislike actions,
+# using HTML redirect and Turbo Stream updates for reaction counts.
+
 module Likes
   class Response
     def initialize(controller, post)
