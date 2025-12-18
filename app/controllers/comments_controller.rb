@@ -1,3 +1,5 @@
+# Handles creation and deletion of comments associated with posts
+
 class CommentsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_post
