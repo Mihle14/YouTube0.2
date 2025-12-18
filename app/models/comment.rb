@@ -6,7 +6,7 @@ class Comment < ApplicationRecord
   has_many :replies, class_name: "Comment", foreign_key: :parent_id, dependent: :destroy
 
   validates :body, presence: true
-  after_create_commit { broadcast_append_to [post, :comments], target: "comments" }
-  after_destroy_commit { broadcast_remove_to [post, :comments] }
+  after_create_commit { Comments::Broadcast.created(self) }
+  after_destroy_commit { Comments::Broadcast.deleted(self) }
 
 end

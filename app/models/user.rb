@@ -19,10 +19,6 @@ class User < ApplicationRecord
 
   private
 
-  def create_channel_for_user
-    build_channel(name: name || "Channel #{id}").save
-  end
-
-
+  after_create { Users::CreateChannel.new(self).call }
 
 end
