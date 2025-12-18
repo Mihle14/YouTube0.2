@@ -1,4 +1,4 @@
-# Handles CRUD actions for channels
+# Manages channel creation, viewing, and updates for authenticated users
 
 class ChannelsController < ApplicationController
   before_action :authenticate_user!
