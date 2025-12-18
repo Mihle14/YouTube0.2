@@ -1,3 +1,6 @@
+# Represents a user's likes or dislikes on a post, 
+# ensuring uniqueness per type
+
 class Like < ApplicationRecord
   belongs_to :user
   belongs_to :post
