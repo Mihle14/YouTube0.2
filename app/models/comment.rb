@@ -1,3 +1,6 @@
+# Represents comments on posts, supports nested replies and 
+# broadcasts updates
+
 class Comment < ApplicationRecord
   belongs_to :user
   belongs_to :post
