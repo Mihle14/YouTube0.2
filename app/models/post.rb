@@ -1,3 +1,5 @@
+# Represents videos/images posts uploaded to a channel
+
 class Post < ApplicationRecord
     belongs_to :user,optional: true
     belongs_to :channel
