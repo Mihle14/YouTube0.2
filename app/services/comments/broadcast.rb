@@ -1,6 +1,8 @@
-# Handles broadcasting the comment creation and deletion updates for the posts
-
+# Handles broadcasting comment updates for posts
 module Comments
+
+  # Handles broadcasting the comment creation and 
+  # deletion updates for the posts they belong to.
   class Broadcast
     def self.created(comment)
       comment.broadcast_append_to [comment.post, :comments], target: "comments"

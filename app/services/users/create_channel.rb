@@ -1,4 +1,7 @@
+# Handles the creation of a channel for a given user
 module Users
+
+  # Service object to create a channel for a user after signup
   class CreateChannel
     def initialize(user)
       @user = user

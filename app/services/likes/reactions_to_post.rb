@@ -1,7 +1,9 @@
-# Service object to handle a user's like or dislike on a post,
-# updating the like/dislike type and creating a notification for the post owner.
-
+# Handles user reactions (like/dislike) to posts
 module Likes
+
+  # Service object to handle a user's like or dislike on a post,
+  # updating the like/dislike type and 
+  # creating a notification for the post owner.
   class ReactionsToPost
     def initialize(post:, user:, like_type:)
       @post = post

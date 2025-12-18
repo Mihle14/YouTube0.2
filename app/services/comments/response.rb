@@ -1,7 +1,8 @@
-# Service object to handle controller responses for comment actions,
-# using both HTML and Turbo Stream formats.
-
+# Handles controller responses for comment actions
 module Comments
+
+  # Service object to handle controller responses for comment actions,
+  # using both HTML and Turbo Stream formats.
   class Response
     def initialize(controller, comment)
       @controller = controller

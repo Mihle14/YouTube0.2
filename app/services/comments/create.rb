@@ -1,6 +1,7 @@
-# Service object to create new comments for posts by users
-
+# Handles the creation of new comments for posts by users
 module Comments
+
+  # Service object to create new comments for posts by users
   class Create
     attr_reader :comment
 

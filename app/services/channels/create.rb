@@ -1,6 +1,7 @@
-# Service object to create new channels for users
-
+# Handles the creation of new channels for users
 module Channels
+
+  # Service object to create new channels for users
   class Create
     attr_reader :channel
 
