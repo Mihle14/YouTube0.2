@@ -1,3 +1,5 @@
+# Handles the subscribing and unsubscribing of users to channels
+
 class SubscriptionsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_channel
