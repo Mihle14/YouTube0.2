@@ -1,3 +1,5 @@
+# Service object that updates an existing channel with given parameters
+
 module Channels
   class Update
     attr_reader :channel
