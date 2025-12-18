@@ -1,3 +1,5 @@
+# Service object that handles controller responses for channel actions
+
 module Channels
   class Response
     def initialize(controller, channel)
