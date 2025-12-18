@@ -1,3 +1,5 @@
+# Displays and marks notifications as read for the current user
+
 class NotificationsController < ApplicationController
   before_action :authenticate_user!
 
