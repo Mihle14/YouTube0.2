@@ -1,3 +1,6 @@
+# Represents a user's channel, with associated posts, 
+# subscribers, and media attachments
+
 class Channel < ApplicationRecord
   belongs_to :user
   has_many :posts, dependent: :destroy
