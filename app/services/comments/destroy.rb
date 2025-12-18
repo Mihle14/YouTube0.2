@@ -1,3 +1,5 @@
+# Service object to destroy the given comments
+
 module Comments
   class Destroy
     attr_reader :comment
