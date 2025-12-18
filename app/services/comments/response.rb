@@ -6,35 +6,41 @@ module Comments
     end
 
     def call
-      errors = @comment.errors
-      persisted_or_valid = @comment.persisted? || errors.empty?
-      action_name_sym = @controller.action_name.to_sym
-
       @controller.respond_to do |format|
-        format.html do
-          if persisted_or_valid
-            @controller.redirect_to @comment.post, notice: "Comment was successfully saved."
-          else
-            @controller.render action_name_sym, status: :unprocessable_entity
-          end
+        format.html { handle_html }
+        format.turbo_stream { handle_turbo }
+      end
+    end
+
+    private
+
+    def persisted_or_valid?
+      @comment.persisted? || @comment.errors.empty?
+    end
+
+    def handle_html
+      if persisted_or_valid?
+        @controller.redirect_to @comment.post, notice: "Comment was successfully saved."
+      else
+        @controller.render @controller.action_name.to_sym, status: :unprocessable_entity
+      end
+    end
+
+    def handle_turbo
+      stream = @controller.turbo_stream
+
+      target, partial =
+        if persisted_or_valid?
+          [@comment, "comments/comment"]
+        else
+          ["comment_form_#{@comment.id || 'new'}", "comments/form"]
         end
 
-        format.turbo_stream do
-          if persisted_or_valid
-            @controller.turbo_stream.replace(
-              @comment,
-              partial: "comments/comment",
-              locals: { comment: @comment }
-            )
-          else
-            @controller.turbo_stream.replace(
-              "comment_form_#{@comment.id || 'new'}",
-              partial: "comments/form",
-              locals: { comment: @comment }
-            )
-          end
-        end
-      end
+      stream.replace(
+        target,
+        partial: partial,
+        locals: { comment: @comment }
+      )
     end
   end
 end
