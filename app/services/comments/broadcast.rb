@@ -1,3 +1,5 @@
+# Handles broadcasting the comment creation and deletion updates for the posts
+
 module Comments
   class Broadcast
     def self.created(comment)
