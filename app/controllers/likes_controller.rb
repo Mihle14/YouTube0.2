@@ -1,3 +1,5 @@
+# Manages the creation and removal of likes/dislikes and reactions for posts
+
 class LikesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_post
