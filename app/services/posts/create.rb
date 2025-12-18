@@ -1,3 +1,6 @@
+# Service object to create a new post for a user, 
+# assigning ownership and channel.
+
 module Posts
   class Create
     attr_reader :post

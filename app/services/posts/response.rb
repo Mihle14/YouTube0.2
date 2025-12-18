@@ -1,3 +1,6 @@
+# Service object to handle controller responses for post actions,
+# using HTML redirects and JSON responses and is error handling.
+
 module Posts
   class Response
     def initialize(controller, post)

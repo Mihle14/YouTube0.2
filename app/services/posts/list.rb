@@ -1,3 +1,6 @@
+# Service object to fetch a list of posts, filtered by a search query,
+# ordered by creation date from ascending to descending order.
+
 module Posts
   class List
     attr_reader :posts

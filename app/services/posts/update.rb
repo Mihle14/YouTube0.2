@@ -1,3 +1,6 @@
+# Service object to update an existing post with given parameters.
+# success? method to check if the update was successful.
+
 module Posts
   class Update
     attr_reader :post

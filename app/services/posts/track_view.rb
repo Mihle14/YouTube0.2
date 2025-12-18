@@ -1,3 +1,7 @@
+# Service object to track a view on a post.
+# Increments the post's view count and 
+# records the view for a specific user not the post owner though.
+
 module Posts
   class TrackView
     def initialize(post:, user:)
